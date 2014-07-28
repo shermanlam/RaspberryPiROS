@@ -1,0 +1,13 @@
+float64 gps_time
+float64 ros_time
+float64 latitude
+float64 longitude
+float64 altitude
+float64 speed
+float64 climb 
+float64 eps 
+float64 epx 
+float64 epy 
+float64 epv
+float64 ept
+int32 NSatellites

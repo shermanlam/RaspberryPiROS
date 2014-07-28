@@ -1,0 +1,7 @@
+set(_CATKIN_CURRENT_PACKAGE "rocket")
+set(rocket_MAINTAINER "pi <pi@todo.todo>")
+set(rocket_DEPRECATED "")
+set(rocket_VERSION "0.0.0")
+set(rocket_BUILD_DEPENDS "message_generation" "roscpp" "rospy" "std_msgs")
+set(rocket_RUN_DEPENDS "message_runtime" "roscpp" "rospy" "std_msgs" "message_generation")
+set(rocket_BUILDTOOL_DEPENDS "catkin")

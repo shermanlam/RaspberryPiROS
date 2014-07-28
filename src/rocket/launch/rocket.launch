@@ -1,0 +1,8 @@
+<launch>
+
+
+<node pkg="rocket" type="gps_node.py" name="gps" cwd="node" output="screen" />
+<node pkg="rocket" type="save_data_node.py" name="logger" cwd="node" output="screen" />
+
+
+</launch>

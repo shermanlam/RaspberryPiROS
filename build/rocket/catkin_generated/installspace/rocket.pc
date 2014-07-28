@@ -1,0 +1,8 @@
+prefix=/home/pi/catkin_ws/install
+
+Name: rocket
+Description: Description of rocket
+Version: 0.0.0
+Cflags: -I/home/pi/catkin_ws/install/include
+Libs: -L/home/pi/catkin_ws/install/lib 
+Requires: message_generation roscpp rospy std_msgs
