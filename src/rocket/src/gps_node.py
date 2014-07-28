@@ -1,4 +1,4 @@
-#! usr/bin/python
+#! /usr/bin/python
 
 ##################################
 #
@@ -113,7 +113,7 @@ def getUnix(gpsTime):
 	yday = -1		# day of the year: -1 for don't know
 	isdst = 0 		# daylight savings. doesn't seem to have effect. Add in hour
 	unix = time.mktime((yr,mon,mday,hour,min,sec,wday,yday,isdst))
-	print time.localtime(unix)
+	# print time.localtime(unix)
 	return unix	
 
 
