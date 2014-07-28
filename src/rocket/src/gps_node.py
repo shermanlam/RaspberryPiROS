@@ -35,7 +35,7 @@ def init():
 	D.NSatellites = 0	# the number of satellites in view
 
 	# time conversion info
-	D.tzOffset = -7 	# offset in hours due to timezones
+	D.tzOffset = -8 	# offset in hours due to timezones
 	D.dst = 1		# daylight savings. 1 = yes, 0 = no
 
 	
@@ -60,7 +60,6 @@ def run():
 	we want and publish
 	"""
 	global D
-	print "running"
 	if True:
 		report = D.session.next()
 		# print report
@@ -78,13 +77,13 @@ def run():
 			if hasattr(report,"speed"):
 				if report.speed != None: gpsMsg.speed = report.speed
 			if hasattr(report,"epx"):
-				if report.epx != None: psMsg.epx = report.epx
+				if report.epx != None: gpsMsg.epx = report.epx
 			if hasattr(report,"epy"): 
 				if report.epy != None: gpsMsg.epy = report.epy
 			if hasattr(report,"ept"): 
 				if report.ept != None: gpsMsg.ept = report.ept
 			if hasattr(report,"eps"): 
-				if report.ept != None: gpsMsg.eps = report.eps
+				if report.eps != None: gpsMsg.eps = report.eps
 			if hasattr(report,"epv"): 
 				if report.epv != None: gpsMsg.epv = report.epv	
 		# get number of satellites in view. Save to global instead of message
@@ -104,15 +103,18 @@ def getUnix(gpsTime):
 	"""
 	Converts a time string into unix
 	"""
-	yr = gpsTime[0:4]
-	mon = gpsTime[5:7]
-	mday = gpsTime[8:10]
-	hour = int(gpsTime[11:13]) + D.tzOffset 	# account for offset due to timezones
-	min = gpsTime[14:16]
-	sec = gpsTime[17:19]
+	yr = int(gpsTime[0:4])
+	mon = int(gpsTime[5:7])
+	mday = int(gpsTime[8:10])
+	hour = int(gpsTime[11:13])+D.tzOffset+D.dst	# account for offset due to timezones
+	min = int(gpsTime[14:16])
+	sec = int(gpsTime[17:19])
 	wday = -1		# weekday: -1 for don't know.
 	yday = -1		# day of the year: -1 for don't know
-	isdst = D.dst 		# daylight savings
+	isdst = 0 		# daylight savings. doesn't seem to have effect. Add in hour
+	unix = time.mktime((yr,mon,mday,hour,min,sec,wday,yday,isdst))
+	print time.localtime(unix)
+	return unix	
 
 
 if __name__ == "__main__":
