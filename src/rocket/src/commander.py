@@ -19,12 +19,15 @@ def parse(data):
 	"""
 	cmd = str(data.data)
 	try:
-		if (cmd == "shutdown") or (cmd == "quit"):
-			rospy.signal_shutdown("User requests rospy shutdown")
+		if (cmd == "shutdown") or (cmd == "quit") or (cmd == "stop"):
+			rospy.loginfo("Shutting down")
+			rospy.signal_shutdown("Shutdown requested")
+		else:
+			rospy.loginfo("Command %s not recognized"%cmd)
 	except:
-		rospy.loginfo("Command %s not recognized"%cmd)
+		rospy.loginfo("Error shutting down")
 
 if __name__ == "__main__":
 	init()
-	rospy.loginfo("Initialized commander node")
+	rospy.loginfo("Commander node initialized")
 	rospy.spin()
