@@ -1,0 +1,5 @@
+<launch>
+
+<node pkg="rocket" type="deployment.py" name="deployment" output="screen" launch-prefix="sudo" />
+
+</launch>
