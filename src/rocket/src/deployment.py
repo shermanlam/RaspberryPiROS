@@ -2,7 +2,7 @@
 
 import rospy
 import time
-import RPi.GPIO as GPIO
+import wiringpi2 as wp2
 from std_msgs.msg import Bool
 from rocket.msg import *
 
@@ -22,7 +22,6 @@ def init():
 	D.pin = 23	# BCM numbering system
 	D.sec = 2	# number of seconds to hold the pin high 
 	
-	rospy.on_shutdown(cleanup)
 	init_gpio()	
 
 
@@ -30,21 +29,16 @@ def init_gpio():
 	"""
 	Initializes gpio pin
 	"""
-	GPIO.setmode(GPIO.BCM) 		# use the BCM numbering system
-	GPIO.setup(D.pin,GPIO.OUT)
-
-
-def cleanup():
-	"""
-	uses library's GPIO cleanup function
-	"""
-	GPIO.cleanup()
+	wp2.wiringPiSetupGpio() 	# should be setup with BCM numbering system
+	wp2.pinMode(D.pin,1) 		# set to output
 
 
 def gps_callback(data):
 	"""
 	Stores latest GPS data
 	"""
+	pass
+
 
 def fire():
 	"""
@@ -52,9 +46,10 @@ def fire():
 	"""
 	global D
 	rospy.loginfo("Setting GPIO pin %s to HIGH"%D.pin)
-	GPIO.output(D.pin,1) 		# set the pin high
+	wp2.digitalWrite(D.pin,1) 	# set the pin high
 	time.sleep(D.sec)		# wait
-	GPIO.output(D.pin,0)		# set the pin low
+	rospy.loginfo("Setting GPIO pin %s to LOW"%D.pin)
+	wp2.digitalWrite(D.pin,0)	# set the pin low
 
 
 def test():
@@ -62,17 +57,17 @@ def test():
 	Cycles the output pin on and off
 	"""
 	global D
-	while True:
-		fire()
-		time.sleep(D.sec)		
+	fire()
+	time.sleep(D.sec)		
+
 
 def run():
 	"""
 	Checks whether or not it is time to deploy the parachute.
 	If so, publish flag and set GPIO pin to high.
 	"""
-	test()
-
+	while not rospy.is_shutdown():
+		test()
 
 
 if __name__ == "__main__":
