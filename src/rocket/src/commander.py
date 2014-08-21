@@ -2,7 +2,8 @@
 
 ########################################################################
 #
-# This node is for sending command signals to all the other nodes
+# This node is for position estimation.When it detects apogee, it sends
+# a "fire" command to the deployment node.
 #
 ########################################################################i
 
