@@ -71,10 +71,11 @@ def init_i2c():
 	activate_ready()
 
 	# init a pin for listening to the "conversion-ready" pin
-	D.conversionReady = 17
+	D.conversionReadyPin = 17
+	D.conversionReady = False
 	GPIO.setmode(GPIO.BCM)
-	GPIO.setup(D.conversionReady, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.add_event_detect(D.conversionReady, GPIO.RISING, callback=ready_callback)
+	GPIO.setup(D.conversionReadyPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+	GPIO.add_event_detect(D.conversionReadyPin, GPIO.RISING, callback=ready_callback)
 
 
 def activate_ready():
@@ -93,6 +94,7 @@ def ready_callback(channel):
 	Gets called when a sample from the ADC is ready
 	"""
 	print "Conversion Ready"
+	D.conversionReady = True
 
 
 def init_ADC_options():
@@ -139,7 +141,7 @@ def init_default_options():
 	global D
 	D.dr = D._1600SPS 	# data rate
 	D.mux = D._MUXA0 	# mux configuration
-	D.pga = D._PGA1		# programmable gain
+	D.pga = D._PGA2		# programmable gain
 	
 
 def write_config():
@@ -152,30 +154,30 @@ def write_config():
 	# bit shift everything into its right place in the message. Check datasheet.
 	# Some options were not broken out for changing. The "magic bits" are 
 	# those options. Combine all the options through bit-wise OR
-	newConfig = (	0 << 15		|	# OS
+	newConfig = (	1 << 15		|	# OS
 			D.mux << 12	|	# MUX
 			D.pga << 9	|	# PGA
-			0 << 8		|	# MODE
+			1 << 8		|	# MODE
 			D.dr << 5	|	# DR
 			0 << 4		|	# COMP_MODE
 			0 << 3 		|	# COMP_POL
 			0 << 2		|	# COMP_LAT
 			0 << 1 	)		# COMP_QUE
 	
-	print "mux: ", bin(D.mux)
-	print "pga: ", bin(D.pga)
-	print "dr: ", bin(D.dr)
+	# print "mux: ", bin(D.mux)
+	# print "pga: ", bin(D.pga)
+	# print "dr: ", bin(D.dr)
 
 	# due to something with byte-writing order, we need to flip
 	# the bytes before writing. I don't know the full details
-	print "config: %s"%bin(newConfig)
-	print "length: %d"%len(bin(newConfig))
+	# print "config: %s"%bin(newConfig)
+	# print "length: %d"%len(bin(newConfig))
 	rev = I2C.reverseByteOrder(newConfig)
-	print "Reversed byte order: ", bin(rev)
+	# print "Reversed byte order: ", bin(rev)
 
 	# write it!
 	D.dut.write16(D.configReg,rev)	
-	print "Written config: ", bin(D.dut.readU16(D.configReg,D.littleEndian))
+	# print "Written config: ", bin(D.dut.readU16(D.configReg,D.littleEndian))
 
 
 def read_single_in(channel):
@@ -204,10 +206,11 @@ def read_single_in(channel):
 	write_config()
 
 	# wait for the configuration to be loaded
-	# time.sleep(0.1)	
+	while not D.conversionReady:
+		pass	
 	
-	# read new conversion
-	print "Conversion: ", D.dut.readU16(0)
+	D.conversionReady = False 			# reset
+	print "Conversion: ", hex(D.dut.readU16(0,D.littleEndian))	# read conversion
 	print 
 	
 
