@@ -75,7 +75,8 @@ def init_i2c():
 	D.conversionReady = False
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(D.conversionReadyPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-	GPIO.add_event_detect(D.conversionReadyPin, GPIO.RISING, callback=ready_callback)
+	# read new conversion
+	GPIO.add_event_detect(D.conversionReadyPin, GPIO.FALLING, callback=ready_callback)
 
 
 def activate_ready():
@@ -141,7 +142,7 @@ def init_default_options():
 	global D
 	D.dr = D._1600SPS 	# data rate
 	D.mux = D._MUXA0 	# mux configuration
-	D.pga = D._PGA2		# programmable gain
+	D.pga = D._PGA1		# programmable gain
 	
 
 def write_config():
@@ -154,10 +155,10 @@ def write_config():
 	# bit shift everything into its right place in the message. Check datasheet.
 	# Some options were not broken out for changing. The "magic bits" are 
 	# those options. Combine all the options through bit-wise OR
-	newConfig = (	1 << 15		|	# OS
+	newConfig = (	1 << 15		|	# OS - trigger conversion
 			D.mux << 12	|	# MUX
 			D.pga << 9	|	# PGA
-			1 << 8		|	# MODE
+			1 << 8		|	# MODE - singal shot
 			D.dr << 5	|	# DR
 			0 << 4		|	# COMP_MODE
 			0 << 3 		|	# COMP_POL
@@ -210,8 +211,43 @@ def read_single_in(channel):
 		pass	
 	
 	D.conversionReady = False 			# reset
-	print "Conversion: ", hex(D.dut.readU16(0,D.littleEndian))	# read conversion
-	print 
+	data = D.dut.readU16(0,D.littleEndian)
+	print "Conversion: ", hex(data)			# read conversion
+	print "Voltage: ", to_voltage(data)		# convert to a voltage reading 
+	
+
+def to_voltage(data):
+	"""
+	Converts data in hex into a voltage. Equation from datasheet
+	"""
+	global D
+
+	# voltage needed for full scale reading dependent on PGA setting
+	FS = fs_lookup()
+
+	# convert to voltage
+	shifted = data >> 4		# last 4 bits aren't used. Data starts at 5th LSB
+	step = float(FS)/(2**11)	# voltage per bit
+	return step*shifted 		# should be linear
+	
+
+def fs_lookup():
+	"""
+	Lookup table that returns the full scale input voltage, depending
+	on PGA setting. All from datasheet. Also returns multiplier
+	"""
+	if D.pga == D._PGA2_3:
+		return 6.144
+	elif D.pga == D._PGA1:
+		return 4.096
+	elif D.pga == D._PGA2:
+		return 2.048
+	elif D.pga == D.PGA4:
+		return 1.024
+	elif D.pga == D.PGA8:
+		return 0.512
+	elif D.pga == D.PGA16:
+		return 0.256
 	
 
 def run():
