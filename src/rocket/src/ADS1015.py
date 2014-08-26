@@ -67,11 +67,25 @@ def init_i2c():
 	# use the adafruit I2C library for I2C access
 	D.dut = I2C.Device(D.addr,D.bus)
 
+	# activate ready pin on ADC
+	activate_ready()
+
 	# init a pin for listening to the "conversion-ready" pin
 	D.conversionReady = 17
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(D.conversionReady, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	GPIO.add_event_detect(D.conversionReady, GPIO.RISING, callback=ready_callback)
+
+
+def activate_ready():
+	"""
+	swaps the high and low threshold registers so that the conversion
+	ready pin will be activated on the ADC
+	"""
+	high = I2C.reverseByteOrder(0x8000)
+	low = I2C.reverseByteOrder(0x7fff)
+	D.dut.write16(D.highThreshReg, high)
+	D.dut.write16(D.lowThreshReg,low)
 
 
 def ready_callback(channel):
@@ -91,7 +105,7 @@ def init_ADC_options():
 	# registers that we can access
 	D.conversionReg 	= 0b00
 	D.configReg		= 0b01
-	D.loThreshReg 		= 0b10
+	D.lowThreshReg 		= 0b10
 	D.highThreshReg		= 0b11
 
 	# data sampling rates
@@ -138,10 +152,10 @@ def write_config():
 	# bit shift everything into its right place in the message. Check datasheet.
 	# Some options were not broken out for changing. The "magic bits" are 
 	# those options. Combine all the options through bit-wise OR
-	newConfig = (	1 << 15		|	# OS
+	newConfig = (	0 << 15		|	# OS
 			D.mux << 12	|	# MUX
 			D.pga << 9	|	# PGA
-			1 << 8		|	# MODE
+			0 << 8		|	# MODE
 			D.dr << 5	|	# DR
 			0 << 4		|	# COMP_MODE
 			0 << 3 		|	# COMP_POL
@@ -190,9 +204,11 @@ def read_single_in(channel):
 	write_config()
 
 	# wait for the configuration to be loaded
+	# time.sleep(0.1)	
 	
-	# read new configuration
-	print D.dut.readU16(0)
+	# read new conversion
+	print "Conversion: ", D.dut.readU16(0)
+	print 
 	
 
 def run():
@@ -202,5 +218,12 @@ def run():
 
 if __name__ == "__main__":
 	init()
-	while True:
-		run()
+	cleanedUp = False
+	try:
+		while True:
+			run()
+	except KeyboardInterrupt:
+		GPIO.cleanup() 		# clean up on <CTRL-C>
+		cleanedUp = True
+	if cleanedUp == False:
+		GPIO.cleanup()		# clean up on normal exit
