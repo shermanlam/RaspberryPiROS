@@ -84,7 +84,7 @@ def init_i2c():
 	D.NChannels = 3
 
 	# rate to read data per channel [Hz]
-	D.ratePerChannel = 1
+	D.ratePerChannel = 70
 
 
 def activate_ready():
@@ -102,7 +102,7 @@ def ready_callback(channel):
 	"""
 	Gets called when a sample from the ADC is ready
 	"""
-	print "Conversion Ready"
+	# print "Conversion Ready"
 	D.conversionReady = True
 
 
@@ -148,7 +148,7 @@ def init_default_options():
 	Sets the default configuration options
 	"""
 	global D
-	D.dr = D._1600SPS 	# data rate
+	D.dr = D._3300SPS 	# data rate
 	D.mux = D._MUXA0 	# mux configuration
 	D.pga = D._PGA1		# programmable gain
 	
@@ -196,7 +196,7 @@ def read_single_in(channel):
 	"""
 	global D
 	
-	print "Trying to read %d"%channel
+	# print "Trying to read %d"%channel
 
 	# change the configuration to account for the correct channel
 	if channel == 0:
@@ -221,8 +221,8 @@ def read_single_in(channel):
 	D.conversionReady = False 			# reset
 	data = D.dut.readU16(0,D.littleEndian)
 	voltage = to_voltage(data)
-	print "Conversion: ", hex(data)			# read conversion
-	print "Voltage: ", voltage 			# convert to a voltage reading 
+	# print "Conversion: ", hex(data)			# read conversion
+	# print "Voltage: ", voltage 			# convert to a voltage reading 
 	
 	return voltage
 	
@@ -290,7 +290,7 @@ def publish(data):
 	msg.y = data[1]
 	msg.z = data[2]
 	D.pub.publish(msg)
-	print "Data published"
+	# print "Data published"
 	
 
 def run():
