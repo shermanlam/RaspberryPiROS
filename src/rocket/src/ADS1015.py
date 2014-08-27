@@ -44,7 +44,7 @@ def init_ros():
 	# subscribers
 
 	# publishers
-	D.pub = rospy.Publisher("low-G",Vector3)	
+	D.pub = rospy.Publisher("highG",Vector3)	
 
 
 def init_i2c():
@@ -291,7 +291,7 @@ def publish(data):
 	msg.z = data[2]
 	D.pub.publish(msg)
 	print "Data published"
-
+	
 
 def run():
 	"""
