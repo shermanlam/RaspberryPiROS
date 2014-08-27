@@ -15,6 +15,7 @@
 import rospy
 import time
 from Adafruit_GPIO import I2C
+from rocket.msg import Vector3
 import RPi.GPIO as GPIO
 
 class Data: pass
@@ -43,7 +44,8 @@ def init_ros():
 	# subscribers
 
 	# publishers
-	
+	D.pub = rospy.Publisher("low-G",Vector3)	
+
 
 def init_i2c():
 	"""
@@ -214,16 +216,17 @@ def read_single_in(channel):
 
 	# wait for the configuration to be loaded
 	while not D.conversionReady:
-		# print "Conversion not ready"
 		pass	
-	
-	# time.sleep(0.005)	
 
 	D.conversionReady = False 			# reset
 	data = D.dut.readU16(0,D.littleEndian)
+	voltage = to_voltage(data)
 	print "Conversion: ", hex(data)			# read conversion
-	print "Voltage: ", to_voltage(data)		# convert to a voltage reading 
+	print "Voltage: ", voltage 			# convert to a voltage reading 
 	
+	return voltage
+	
+
 
 def to_voltage(data):
 	"""
@@ -280,6 +283,16 @@ def dr_lookup():
 		return 3300	
 		
 
+def publish(data):
+	global D
+	msg = Vector3()
+	msg.x = data[0]
+	msg.y = data[1]
+	msg.z = data[2]
+	D.pub.publish(msg)
+	print "Data published"
+
+
 def run():
 	"""
 	Reads the designated number of channels at the specifies rate/channel
@@ -296,14 +309,19 @@ def run():
 
 	# variable to store which channel we're reading now
 	channel = 0
+
+	# holds all the voltages until all channels have been sampled
+	data = [0,0,0]
 	
 	# cycle through all the channels
 	rate = rospy.Rate(reqDR)
 	while not rospy.is_shutdown(): 	
-		read_single_in(channel)
+		data[channel] = read_single_in(channel)
 		channel += 1
-		if channel >= D.NChannels:
-			channel = 0	
+		if channel == D.NChannels:		# if all have been sampled, publish and reset.
+			channel = 0
+			publish(data)
+			data = [0,0,0]	
 		rate.sleep()
 
 

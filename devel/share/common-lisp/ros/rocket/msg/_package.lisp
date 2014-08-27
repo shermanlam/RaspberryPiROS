@@ -3,5 +3,7 @@
   (:export
    "<ROSGPS>"
    "ROSGPS"
+   "<VECTOR3>"
+   "VECTOR3"
   ))
 

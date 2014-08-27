@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.cmake.em
 
-message(STATUS "rocket: 1 messages, 0 services")
+message(STATUS "rocket: 2 messages, 0 services")
 
 set(MSG_I_FLAGS "-Irocket:/home/pi/catkin_ws/src/rocket/msg;-Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg")
 
@@ -19,6 +19,12 @@ add_custom_target(rocket_generate_messages ALL)
 ### Generating Messages
 _generate_msg_cpp(rocket
   "/home/pi/catkin_ws/src/rocket/msg/RosGPS.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rocket
+)
+_generate_msg_cpp(rocket
+  "/home/pi/catkin_ws/src/rocket/msg/Vector3.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/rocket
@@ -52,6 +58,12 @@ _generate_msg_lisp(rocket
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rocket
 )
+_generate_msg_lisp(rocket
+  "/home/pi/catkin_ws/src/rocket/msg/Vector3.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/rocket
+)
 
 ### Generating Services
 
@@ -77,6 +89,12 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS rocket_generate_messages_lisp)
 ### Generating Messages
 _generate_msg_py(rocket
   "/home/pi/catkin_ws/src/rocket/msg/RosGPS.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rocket
+)
+_generate_msg_py(rocket
+  "/home/pi/catkin_ws/src/rocket/msg/Vector3.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/rocket
