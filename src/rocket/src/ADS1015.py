@@ -12,7 +12,7 @@
 #
 ###########################################################
 
-# import rospy
+import rospy
 import time
 from Adafruit_GPIO import I2C
 import RPi.GPIO as GPIO
@@ -25,7 +25,7 @@ def init():
 	global D
 
 	# init ROS stuff	
-	# init_ros()
+	init_ros()
 	
 	# init I2C stuff
 	init_i2c()
@@ -38,7 +38,7 @@ def init_ros():
 	global D
 
 	# node
-	# rospy.init_node("ADS1015")
+	rospy.init_node("ADS1015")
 	
 	# subscribers
 
@@ -77,6 +77,12 @@ def init_i2c():
 	GPIO.setup(D.conversionReadyPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 	# read new conversion
 	GPIO.add_event_detect(D.conversionReadyPin, GPIO.FALLING, callback=ready_callback)
+
+	# number of channels to read
+	D.NChannels = 3
+
+	# rate to read data per channel [Hz]
+	D.ratePerChannel = 1
 
 
 def activate_ready():
@@ -208,8 +214,11 @@ def read_single_in(channel):
 
 	# wait for the configuration to be loaded
 	while not D.conversionReady:
+		# print "Conversion not ready"
 		pass	
 	
+	# time.sleep(0.005)	
+
 	D.conversionReady = False 			# reset
 	data = D.dut.readU16(0,D.littleEndian)
 	print "Conversion: ", hex(data)			# read conversion
@@ -250,17 +259,60 @@ def fs_lookup():
 		return 0.256
 	
 
+def dr_lookup():
+	"""
+	loopup table for data sampling rate
+	"""
+	global D
+	if D.dr == D._128SPS:
+		return 128
+	elif D.dr == D._250SPS:
+		return 250	
+	elif D.dr == D._490SPS:
+		return 490	
+	elif D.dr == D._920SPS:
+		return 920	
+	elif D.dr == D._1600SPS:
+		return 1600	
+	elif D.dr == D._2400SPS:
+		return 2400	
+	elif D.dr == D._3300SPS:
+		return 3300	
+		
+
 def run():
-	read_single_in(0)
-	time.sleep(1)	
+	"""
+	Reads the designated number of channels at the specifies rate/channel
+	"""
+	global D
+	
+	# check that the data rate is allowed
+	maxDR = dr_lookup()				# max sampling rate
+	reqDR = D.NChannels*D.ratePerChannel		# what our theoretical sampling rate is
+	if reqDR > maxDR:
+		rospy.logfatal("ADS1015 cannot log data at %d"%reqDR)
+		GPIO.cleanup()
+		rospy.signal_shutdown("Data logging rate too high")
+
+	# variable to store which channel we're reading now
+	channel = 0
+	
+	# cycle through all the channels
+	rate = rospy.Rate(reqDR)
+	while not rospy.is_shutdown(): 	
+		read_single_in(channel)
+		channel += 1
+		if channel >= D.NChannels:
+			channel = 0	
+		rate.sleep()
 
 
 if __name__ == "__main__":
 	init()
+	rospy.loginfo("ADS1015 node initialized")
 	cleanedUp = False
 	try:
-		while True:
-			run()
+		run()
 	except KeyboardInterrupt:
 		GPIO.cleanup() 		# clean up on <CTRL-C>
 		cleanedUp = True
