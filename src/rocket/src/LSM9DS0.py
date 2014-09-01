@@ -9,6 +9,7 @@
 
 import time
 import rospy
+import math
 from Adafruit_GPIO import I2C
 from rocket.msg import Vector3
 
@@ -271,6 +272,8 @@ def read_gyro():
 	print "Two's gyro: ", data
 	data = map(gyro_to_analog,data)		# convert to dps
 	print "analog gyro: ", data
+	data = map(math.radians,data)
+	print "radians gyro: ", data
 	return data 
 
 
