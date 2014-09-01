@@ -49,6 +49,7 @@ add_message_files(
   FILES
   RosGPS.msg
   Vector3.msg
+  Vector3Stamped.msg
 )
 
 ## Generate services in the 'srv' folder

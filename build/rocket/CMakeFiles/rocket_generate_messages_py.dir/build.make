@@ -46,6 +46,7 @@ CMAKE_BINARY_DIR = /home/pi/catkin_ws/build
 include rocket/CMakeFiles/rocket_generate_messages_py.dir/progress.make
 
 rocket/CMakeFiles/rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_RosGPS.py
+rocket/CMakeFiles/rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3Stamped.py
 rocket/CMakeFiles/rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3.py
 rocket/CMakeFiles/rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/__init__.py
 
@@ -55,21 +56,29 @@ rocket/CMakeFiles/rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/pyth
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating Python from MSG rocket/RosGPS"
 	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/pi/catkin_ws/src/rocket/msg/RosGPS.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg
 
+/home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3Stamped.py: /home/pi/ros_catkin_ws/install_isolated/share/genpy/cmake/../../../lib/genpy/genmsg_py.py
+/home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3Stamped.py: /home/pi/catkin_ws/src/rocket/msg/Vector3Stamped.msg
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating Python from MSG rocket/Vector3Stamped"
+	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/pi/catkin_ws/src/rocket/msg/Vector3Stamped.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg
+
 /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3.py: /home/pi/ros_catkin_ws/install_isolated/share/genpy/cmake/../../../lib/genpy/genmsg_py.py
 /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3.py: /home/pi/catkin_ws/src/rocket/msg/Vector3.msg
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating Python from MSG rocket/Vector3"
 	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/pi/catkin_ws/src/rocket/msg/Vector3.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg
 
 /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/__init__.py: /home/pi/ros_catkin_ws/install_isolated/share/genpy/cmake/../../../lib/genpy/genmsg_py.py
 /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/__init__.py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_RosGPS.py
+/home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/__init__.py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3Stamped.py
 /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/__init__.py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3.py
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating Python msg __init__.py for rocket"
 	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/genpy/cmake/../../../lib/genpy/genmsg_py.py -o /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg --initpy
 
 rocket_generate_messages_py: rocket/CMakeFiles/rocket_generate_messages_py
 rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_RosGPS.py
+rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3Stamped.py
 rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/_Vector3.py
 rocket_generate_messages_py: /home/pi/catkin_ws/devel/lib/python2.7/dist-packages/rocket/msg/__init__.py
 rocket_generate_messages_py: rocket/CMakeFiles/rocket_generate_messages_py.dir/build.make

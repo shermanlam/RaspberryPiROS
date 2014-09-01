@@ -46,6 +46,7 @@ CMAKE_BINARY_DIR = /home/pi/catkin_ws/build
 include rocket/CMakeFiles/rocket_generate_messages_cpp.dir/progress.make
 
 rocket/CMakeFiles/rocket_generate_messages_cpp: /home/pi/catkin_ws/devel/include/rocket/RosGPS.h
+rocket/CMakeFiles/rocket_generate_messages_cpp: /home/pi/catkin_ws/devel/include/rocket/Vector3Stamped.h
 rocket/CMakeFiles/rocket_generate_messages_cpp: /home/pi/catkin_ws/devel/include/rocket/Vector3.h
 
 /home/pi/catkin_ws/devel/include/rocket/RosGPS.h: /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
@@ -55,15 +56,23 @@ rocket/CMakeFiles/rocket_generate_messages_cpp: /home/pi/catkin_ws/devel/include
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from rocket/RosGPS.msg"
 	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/pi/catkin_ws/src/rocket/msg/RosGPS.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/include/rocket -e /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/..
 
+/home/pi/catkin_ws/devel/include/rocket/Vector3Stamped.h: /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
+/home/pi/catkin_ws/devel/include/rocket/Vector3Stamped.h: /home/pi/catkin_ws/src/rocket/msg/Vector3Stamped.msg
+/home/pi/catkin_ws/devel/include/rocket/Vector3Stamped.h: /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../msg.h.template
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from rocket/Vector3Stamped.msg"
+	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/pi/catkin_ws/src/rocket/msg/Vector3Stamped.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/include/rocket -e /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/..
+
 /home/pi/catkin_ws/devel/include/rocket/Vector3.h: /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py
 /home/pi/catkin_ws/devel/include/rocket/Vector3.h: /home/pi/catkin_ws/src/rocket/msg/Vector3.msg
 /home/pi/catkin_ws/devel/include/rocket/Vector3.h: /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../msg.h.template
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating C++ code from rocket/Vector3.msg"
 	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/pi/catkin_ws/src/rocket/msg/Vector3.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/include/rocket -e /home/pi/ros_catkin_ws/install_isolated/share/gencpp/cmake/..
 
 rocket_generate_messages_cpp: rocket/CMakeFiles/rocket_generate_messages_cpp
 rocket_generate_messages_cpp: /home/pi/catkin_ws/devel/include/rocket/RosGPS.h
+rocket_generate_messages_cpp: /home/pi/catkin_ws/devel/include/rocket/Vector3Stamped.h
 rocket_generate_messages_cpp: /home/pi/catkin_ws/devel/include/rocket/Vector3.h
 rocket_generate_messages_cpp: rocket/CMakeFiles/rocket_generate_messages_cpp.dir/build.make
 .PHONY : rocket_generate_messages_cpp

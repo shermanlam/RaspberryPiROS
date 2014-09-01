@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/pi/catkin_ws/src/rocket/msg/RosGPS.msg;/home/pi/catkin_ws/src/rocket/msg/Vector3.msg"
+messages_str = "/home/pi/catkin_ws/src/rocket/msg/RosGPS.msg;/home/pi/catkin_ws/src/rocket/msg/Vector3.msg;/home/pi/catkin_ws/src/rocket/msg/Vector3Stamped.msg"
 services_str = ""
 pkg_name = "rocket"
 dependencies_str = "std_msgs"

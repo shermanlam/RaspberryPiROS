@@ -267,13 +267,9 @@ def read_gyro():
 	y = (D.gyro.readU8(D.OUT_Y_H_G)<<8)|D.gyro.readU8(D.OUT_Y_L_G)
 	z = (D.gyro.readU8(D.OUT_Z_H_G)<<8)|D.gyro.readU8(D.OUT_Z_L_G)
 	data = [x,y,z]
-	print "Raw gyro: ", data
 	data = map(twos_complement,data)	# convert to two's complement
-	print "Two's gyro: ", data
 	data = map(gyro_to_analog,data)		# convert to dps
-	print "analog gyro: ", data
 	data = map(math.radians,data)
-	print "radians gyro: ", data
 	return data 
 
 
@@ -286,11 +282,8 @@ def read_accel():
 	y = (D.accel.readU8(D.OUT_Y_H_A)<<8)|D.accel.readU8(D.OUT_Y_L_A)
 	z = (D.accel.readU8(D.OUT_Z_H_A)<<8)|D.accel.readU8(D.OUT_Z_L_A)
 	data = [x,y,z]
-	print "Raw XM: ",data
 	data = map(twos_complement,data)	# convert to two's complement
-	print "Two's XM: ",data
 	data = map(accel_to_analog,data)		# convert to m/s
-	print "analog accel: ",data
 	return data 
 
 	
@@ -344,19 +337,15 @@ def read_data():
 	while not(readG and readA):
 		# check if gyro is ready
 		if not readG:
-			print "checking G"
 			# get the 4th LSB
 			readyG = (D.gyro.readU8(D.STATUS_REG_G) & (1<<3)) >> 3 
-			print "readyG", readyG
 			if readyG==1:
 				# read
 				dataG = read_gyro()
 				readG = 1
 		if not readA==1:
-			print "checking A"
 			# get the 4th LSB
 			readyA = (D.gyro.readU8(D.STATUS_REG_A) & (1<<3)) >> 3 
-			print "readyA", readyA	
 			if readyA==1:
 				# read
 				dataA = read_accel()
@@ -378,7 +367,6 @@ def run():
 	while not rospy.is_shutdown():
 		dataG,dataA = read_data()
 		publish(dataG,dataA)
-		print 
 		rate.sleep()
 	
 

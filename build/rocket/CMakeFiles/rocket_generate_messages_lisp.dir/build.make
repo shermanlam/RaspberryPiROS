@@ -46,6 +46,7 @@ CMAKE_BINARY_DIR = /home/pi/catkin_ws/build
 include rocket/CMakeFiles/rocket_generate_messages_lisp.dir/progress.make
 
 rocket/CMakeFiles/rocket_generate_messages_lisp: /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/RosGPS.lisp
+rocket/CMakeFiles/rocket_generate_messages_lisp: /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3Stamped.lisp
 rocket/CMakeFiles/rocket_generate_messages_lisp: /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3.lisp
 
 /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/RosGPS.lisp: /home/pi/ros_catkin_ws/install_isolated/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py
@@ -54,14 +55,21 @@ rocket/CMakeFiles/rocket_generate_messages_lisp: /home/pi/catkin_ws/devel/share/
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating Lisp code from rocket/RosGPS.msg"
 	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/pi/catkin_ws/src/rocket/msg/RosGPS.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg
 
+/home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3Stamped.lisp: /home/pi/ros_catkin_ws/install_isolated/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py
+/home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3Stamped.lisp: /home/pi/catkin_ws/src/rocket/msg/Vector3Stamped.msg
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating Lisp code from rocket/Vector3Stamped.msg"
+	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/pi/catkin_ws/src/rocket/msg/Vector3Stamped.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg
+
 /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3.lisp: /home/pi/ros_catkin_ws/install_isolated/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py
 /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3.lisp: /home/pi/catkin_ws/src/rocket/msg/Vector3.msg
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/pi/catkin_ws/build/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating Lisp code from rocket/Vector3.msg"
 	cd /home/pi/catkin_ws/build/rocket && ../catkin_generated/env_cached.sh /usr/bin/python /home/pi/ros_catkin_ws/install_isolated/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/pi/catkin_ws/src/rocket/msg/Vector3.msg -Irocket:/home/pi/catkin_ws/src/rocket/msg -Istd_msgs:/home/pi/ros_catkin_ws/install_isolated/share/std_msgs/cmake/../msg -p rocket -o /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg
 
 rocket_generate_messages_lisp: rocket/CMakeFiles/rocket_generate_messages_lisp
 rocket_generate_messages_lisp: /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/RosGPS.lisp
+rocket_generate_messages_lisp: /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3Stamped.lisp
 rocket_generate_messages_lisp: /home/pi/catkin_ws/devel/share/common-lisp/ros/rocket/msg/Vector3.lisp
 rocket_generate_messages_lisp: rocket/CMakeFiles/rocket_generate_messages_lisp.dir/build.make
 .PHONY : rocket_generate_messages_lisp
