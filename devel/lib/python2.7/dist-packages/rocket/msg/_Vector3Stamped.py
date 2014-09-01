@@ -6,17 +6,17 @@ import struct
 
 
 class Vector3Stamped(genpy.Message):
-  _md5sum = "a6ddd438be33f83c6b713c41918f83e1"
+  _md5sum = "8ed4dcb6382e6a419737c7a7d2a6e517"
   _type = "rocket/Vector3Stamped"
   _has_header = False #flag to mark the presence of a Header object
-  _full_text = """int32 time
+  _full_text = """float64 time
 float64 x
 float64 y
 float64 z
 
 """
   __slots__ = ['time','x','y','z']
-  _slot_types = ['int32','float64','float64','float64']
+  _slot_types = ['float64','float64','float64','float64']
 
   def __init__(self, *args, **kwds):
     """
@@ -36,7 +36,7 @@ float64 z
       super(Vector3Stamped, self).__init__(*args, **kwds)
       #message fields cannot be None, assign default values for those that are
       if self.time is None:
-        self.time = 0
+        self.time = 0.
       if self.x is None:
         self.x = 0.
       if self.y is None:
@@ -44,7 +44,7 @@ float64 z
       if self.z is None:
         self.z = 0.
     else:
-      self.time = 0
+      self.time = 0.
       self.x = 0.
       self.y = 0.
       self.z = 0.
@@ -62,7 +62,7 @@ float64 z
     """
     try:
       _x = self
-      buff.write(_struct_i3d.pack(_x.time, _x.x, _x.y, _x.z))
+      buff.write(_struct_4d.pack(_x.time, _x.x, _x.y, _x.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(_x))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(_x))))
 
@@ -75,8 +75,8 @@ float64 z
       end = 0
       _x = self
       start = end
-      end += 28
-      (_x.time, _x.x, _x.y, _x.z,) = _struct_i3d.unpack(str[start:end])
+      end += 32
+      (_x.time, _x.x, _x.y, _x.z,) = _struct_4d.unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
@@ -90,7 +90,7 @@ float64 z
     """
     try:
       _x = self
-      buff.write(_struct_i3d.pack(_x.time, _x.x, _x.y, _x.z))
+      buff.write(_struct_4d.pack(_x.time, _x.x, _x.y, _x.z))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(_x))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(_x))))
 
@@ -104,11 +104,11 @@ float64 z
       end = 0
       _x = self
       start = end
-      end += 28
-      (_x.time, _x.x, _x.y, _x.z,) = _struct_i3d.unpack(str[start:end])
+      end += 32
+      (_x.time, _x.x, _x.y, _x.z,) = _struct_4d.unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e) #most likely buffer underfill
 
 _struct_I = genpy.struct_I
-_struct_i3d = struct.Struct("<i3d")
+_struct_4d = struct.Struct("<4d")

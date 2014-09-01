@@ -11,7 +11,7 @@ import time
 import rospy
 import math
 from Adafruit_GPIO import I2C
-from rocket.msg import Vector3
+from rocket.msg import Vector3Stamped
 
 
 class Data: pass
@@ -31,8 +31,8 @@ def init_ros():
 	rospy.init_node("LSM9DS0")
 
 	# publisher
-	D.gyroPub = rospy.Publisher("gyro",Vector3)
-	D.accelPub = rospy.Publisher("lowG",Vector3)
+	D.gyroPub = rospy.Publisher("gyro",Vector3Stamped)
+	D.accelPub = rospy.Publisher("lowG",Vector3Stamped)
 
 	# rate
 	D.rate = 1	# [Hz]
@@ -375,17 +375,20 @@ def publish(dataG,dataA):
 	publishes the gyro and accel data
 	"""
 	global D
+	time = rospy.get_time() 	# not real time, used for elapsed time
 	# gyro
-	msgG = Vector3()
+	msgG = Vector3Stamped()
 	msgG.x = dataG[0]
 	msgG.y = dataG[1]
 	msgG.z = dataG[2]
+	msgG.time = time
 	D.gyroPub.publish(msgG)
 	# accel
-	msgA = Vector3()
+	msgA = Vector3Stamped()
 	msgA.x = dataA[0]
 	msgA.y = dataA[1]
 	msgA.z = dataA[2]
+	msgA.time = time
 	D.accelPub.publish(msgA)
 
 

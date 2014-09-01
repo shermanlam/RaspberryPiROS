@@ -15,7 +15,7 @@
 import rospy
 import time
 from Adafruit_GPIO import I2C
-from rocket.msg import Vector3
+from rocket.msg import Vector3Stamped
 import RPi.GPIO as GPIO
 
 class Data: pass
@@ -41,10 +41,8 @@ def init_ros():
 	# node
 	rospy.init_node("ADS1015")
 	
-	# subscribers
-
 	# publishers
-	D.pub = rospy.Publisher("highG",Vector3)	
+	D.pub = rospy.Publisher("highG",Vector3Stamped)	
 
 
 def init_i2c():
@@ -285,10 +283,11 @@ def dr_lookup():
 
 def publish(data):
 	global D
-	msg = Vector3()
+	msg = Vector3Stamped()
 	msg.x = data[0]
 	msg.y = data[1]
 	msg.z = data[2]
+	msg.time = rospy.get_time()
 	D.pub.publish(msg)
 	# print "Data published"
 	

@@ -57,13 +57,13 @@ struct Vector3Stamped_
   typedef Vector3Stamped_<ContainerAllocator> Type;
 
   Vector3Stamped_()
-    : time(0)
+    : time(0.0)
     , x(0.0)
     , y(0.0)
     , z(0.0)  {
     }
   Vector3Stamped_(const ContainerAllocator& _alloc)
-    : time(0)
+    : time(0.0)
     , x(0.0)
     , y(0.0)
     , z(0.0)  {
@@ -71,7 +71,7 @@ struct Vector3Stamped_
 
 
 
-   typedef int32_t _time_type;
+   typedef double _time_type;
   _time_type time;
 
    typedef double _x_type;
@@ -161,12 +161,12 @@ struct MD5Sum< ::rocket::Vector3Stamped_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "a6ddd438be33f83c6b713c41918f83e1";
+    return "8ed4dcb6382e6a419737c7a7d2a6e517";
   }
 
   static const char* value(const ::rocket::Vector3Stamped_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xa6ddd438be33f83cULL;
-  static const uint64_t static_value2 = 0x6b713c41918f83e1ULL;
+  static const uint64_t static_value1 = 0x8ed4dcb6382e6a41ULL;
+  static const uint64_t static_value2 = 0x9737c7a7d2a6e517ULL;
 };
 
 template<class ContainerAllocator>
@@ -185,7 +185,7 @@ struct Definition< ::rocket::Vector3Stamped_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "int32 time\n\
+    return "float64 time\n\
 float64 x\n\
 float64 y\n\
 float64 z\n\
@@ -230,7 +230,7 @@ struct Printer< ::rocket::Vector3Stamped_<ContainerAllocator> >
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::rocket::Vector3Stamped_<ContainerAllocator>& v)
   {
     s << indent << "time: ";
-    Printer<int32_t>::stream(s, indent + "  ", v.time);
+    Printer<double>::stream(s, indent + "  ", v.time);
     s << indent << "x: ";
     Printer<double>::stream(s, indent + "  ", v.x);
     s << indent << "y: ";
