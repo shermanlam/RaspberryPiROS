@@ -7,6 +7,7 @@
 #
 ##################################################
 
+import time
 import rospy
 from Adafruit_GPIO import I2C
 
@@ -211,7 +212,7 @@ def read_gyro():
 	# merge the low and high bits
 	x = (D.gyro.readU8(D.OUT_X_H_G)<<8)|D.gyro.readU8(D.OUT_X_L_G)
 	y = (D.gyro.readU8(D.OUT_Y_H_G)<<8)|D.gyro.readU8(D.OUT_Y_L_G)
-	x = (D.gyro.readU8(D.OUT_Z_H_G)<<8)|D.gyro.readU8(D.OUT_Z_L_G)
+	z = (D.gyro.readU8(D.OUT_Z_H_G)<<8)|D.gyro.readU8(D.OUT_Z_L_G)
 	data = [x,y,z]
 	# convert to two's complement
 	converted = map(twos_complement,data)
@@ -225,7 +226,7 @@ def read_accel():
 	global D
 	x = (D.accel.readU8(D.OUT_X_H_A)<<8)|D.accel.readU8(D.OUT_X_L_A)
 	y = (D.accel.readU8(D.OUT_Y_H_A)<<8)|D.accel.readU8(D.OUT_Y_L_A)
-	x = (D.accel.readU8(D.OUT_Z_H_A)<<8)|D.accel.readU8(D.OUT_Z_L_A)
+	z = (D.accel.readU8(D.OUT_Z_H_A)<<8)|D.accel.readU8(D.OUT_Z_L_A)
 	data = [x,y,z]
 	# convert to two's complement
 	converted = map(twos_complement,data)
@@ -253,23 +254,35 @@ def read_data():
 	# data
 	gyroData = [0,0,0]
 	accelData = [0,0,0]
+	# to prevent inifinite looping
+	counter = 0
+	limit = 10
 	# loop while both have not been read
 	while not(readG and readA):
 		# check if gyro is ready
 		if not readG:
 			print "checking G"
-			readyG = D.STATUS_REG_G & (1<<3) # 4th LSB
-			if readyG:
+			# get the 4th LSB
+			readyG = (D.gyro.readU8(D.STATUS_REG_G) & (1<<3)) >> 3 
+			print "readyG", readyG
+			if readyG==1:
 				# read
 				dataG = read_gyro()
 				readG = 1
-		if not readA:
+		if not readA==1:
 			print "checking A"
-			readyA = D.STATUS_REG_A & (1<<3) # 4th LSB
-			if readyA:
+			# get the 4th LSB
+			readyA = (D.gyro.readU8(D.STATUS_REG_A) & (1<<3)) >> 3 
+			print "readyA", readyA	
+			if readyA==1:
 				# read
 				dataA = read_accel()
 				readA = 1
+		time.sleep(1)
+		counter += 1
+		if counter == limit:
+			print "Could not get all the data"
+			break
 	return dataG,dataA
 
 
@@ -280,11 +293,13 @@ def run():
 	global D
 	rate = rospy.Rate(D.rate)	
 	while not rospy.is_shutdown():
-		# dataG,dataA = read_data()
+		dataG,dataA = read_data()
+		print dataG,dataA
 		# TODO: publish
 		print "gyro ctrl reg", bin(D.gyro.readU8(D.CTRL_REG1_G))
 		print "accel ctrl reg 1", bin(D.accel.readU8(D.CTRL_REG1_XM))
 		print "accel ctrl reg 2", bin(D.accel.readU8(D.CTRL_REG2_XM))
+		print 
 		rate.sleep()
 	
 
