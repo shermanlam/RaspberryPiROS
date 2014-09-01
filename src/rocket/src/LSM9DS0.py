@@ -10,6 +10,7 @@
 import time
 import rospy
 from Adafruit_GPIO import I2C
+from rocket.msg import Vector3
 
 
 class Data: pass
@@ -25,10 +26,16 @@ def init_ros():
 	"""
 	Initializes ROS stuff
 	"""
+	# node
 	rospy.init_node("LSM9DS0")
+
+	# publisher
+	D.gyroPub = rospy.Publisher("gyro",Vector3)
+	D.accelPub = rospy.Publisher("lowG",Vector3)
 
 	# rate
 	D.rate = 1	# [Hz]
+
 
 def init_i2c():
 	"""
@@ -367,10 +374,29 @@ def run():
 	rate = rospy.Rate(D.rate)	
 	while not rospy.is_shutdown():
 		dataG,dataA = read_data()
-		# TODO: publish
+		publish(dataG,dataA)
 		print 
 		rate.sleep()
 	
+
+def publish(dataG,dataA):
+	"""
+	publishes the gyro and accel data
+	"""
+	global D
+	# gyro
+	msgG = Vector3()
+	msgG.x = dataG[0]
+	msgG.y = dataG[1]
+	msgG.z = dataG[2]
+	D.gyroPub.publish(msgG)
+	# accel
+	msgA = Vector3()
+	msgA.x = dataA[0]
+	msgA.y = dataA[1]
+	msgA.z = dataA[2]
+	D.accelPub.publish(msgA)
+
 
 if __name__ == "__main__":
 	init()
