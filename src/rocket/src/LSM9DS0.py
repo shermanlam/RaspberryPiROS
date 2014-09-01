@@ -144,6 +144,30 @@ def init_ctrl_options_G():
 	Xen 		= 1		# enabled
 	D.ctrl1_G	= (DR<<6)|(BW<<4)|(PD<<3)|(Zen<<2)|(Yen<<1)|Xen
 
+	# control register 4
+	D.maxRot	= 245			# [degrees/sec]
+	BDU		= 0b0			# default
+	BLE		= 0b0			# default
+	FS		= gyro_lookup(D.maxRot)	# 245dps
+	ST		= 0b00			# default
+	SIM		= 0b0			# default
+	D.ctrl4_G	= (BDU<<7)|(BLE<<6)|(FS<<4)|(ST<<1)|SIM
+
+
+def gyro_lookup(maxRot):
+	"""
+	converts a max rotation rate into a binary code, according to the 
+	datasheet
+	"""
+	if maxRot == 245:
+		return 0b00
+	elif maxRot == 500:
+		return 0b01
+	elif maxRot == 2000:
+		return 0b10
+	else:
+		return 0b00	# default to lowest
+
 
 def init_ctrl_options_XM():
 	"""
@@ -218,6 +242,7 @@ def write_ctrl_options():
 	global D
 	# gyro controls
 	D.gyro.write8(D.CTRL_REG1_G,D.ctrl1_G)
+	D.gyro.write8(D.CTRL_REG4_G,D.ctrl4_G)
 
 	# accel controls
 	D.accel.write8(D.CTRL_REG1_XM,D.ctrl1_XM)
@@ -234,7 +259,11 @@ def read_gyro():
 	y = (D.gyro.readU8(D.OUT_Y_H_G)<<8)|D.gyro.readU8(D.OUT_Y_L_G)
 	z = (D.gyro.readU8(D.OUT_Z_H_G)<<8)|D.gyro.readU8(D.OUT_Z_L_G)
 	data = [x,y,z]
+	print "Raw gyro: ", data
 	data = map(twos_complement,data)	# convert to two's complement
+	print "Two's gyro: ", data
+	data = map(gyro_to_analog,data)		# convert to dps
+	print "analog gyro: ", data
 	return data 
 
 
@@ -247,10 +276,10 @@ def read_accel():
 	y = (D.accel.readU8(D.OUT_Y_H_A)<<8)|D.accel.readU8(D.OUT_Y_L_A)
 	z = (D.accel.readU8(D.OUT_Z_H_A)<<8)|D.accel.readU8(D.OUT_Z_L_A)
 	data = [x,y,z]
-	print "Raw: ",data
+	print "Raw XM: ",data
 	data = map(twos_complement,data)	# convert to two's complement
-	print "Two's: ",data
-	data = map(to_analog,data)		# convert to m/s
+	print "Two's XM: ",data
+	data = map(accel_to_analog,data)		# convert to m/s
 	print "analog accel: ",data
 	return data 
 
@@ -265,9 +294,19 @@ def twos_complement(u16):
 	return u16
 
 
-def to_analog(s16):
+def gyro_to_analog(s16):
 	"""
-	converts a signed 16 bit value into an analog value
+	converts a signed 16bit rotation rate into an analog value
+	"""
+	global D
+	bits = 16
+	frac = 1.0*s16/(2**(bits-1)-1)
+	return D.maxRot*frac	
+
+
+def accel_to_analog(s16):
+	"""
+	converts a signed 16 bit acceleration value into an analog value
 	"""
 	global D
 	bits = 16
