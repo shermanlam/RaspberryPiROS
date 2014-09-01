@@ -163,10 +163,30 @@ def init_ctrl_options_XM():
 	D.ctrl1_XM	= (AODR<<4)|(BDU<<3)|(AZen<<2)|(AYen<<1)|AXen
 
 	# control register 2
-	ABW		= 0b00		# 773 [Hz]
-	AFS		= 0b100		# +/- 16 [g]
-	AST		= 0b00		# normal
+	D.maxAccel 	= 2				# [g]
+	ABW		= 0b00				# 773 [Hz]
+	AFS		= accel_lookup(D.maxAccel)	# +/- 16 [g]
+	AST		= 0b00				# normal
 	D.ctrl2_XM	= (ABW<<6)|(AFS<<3)|(AST<<1)
+
+
+def accel_lookup(maxAccel):
+	"""
+	converts a desired max acceleration into its corresponding binary
+	code as defined by the datasheet
+	"""
+	if maxAccel == 2:
+		return 0b000
+	elif maxAccel == 4:
+		return 0b001
+	elif maxAccel == 6:
+		return 0b010
+	elif maxAccel == 8:
+		return 0b011
+	elif maxAccel == 16:
+		return 0b100
+	else:
+		return 0b100	# default to highest setting
 
 
 def check_id():
@@ -214,9 +234,8 @@ def read_gyro():
 	y = (D.gyro.readU8(D.OUT_Y_H_G)<<8)|D.gyro.readU8(D.OUT_Y_L_G)
 	z = (D.gyro.readU8(D.OUT_Z_H_G)<<8)|D.gyro.readU8(D.OUT_Z_L_G)
 	data = [x,y,z]
-	# convert to two's complement
-	converted = map(twos_complement,data)
-	return converted 
+	data = map(twos_complement,data)	# convert to two's complement
+	return data 
 
 
 def read_accel():
@@ -228,9 +247,12 @@ def read_accel():
 	y = (D.accel.readU8(D.OUT_Y_H_A)<<8)|D.accel.readU8(D.OUT_Y_L_A)
 	z = (D.accel.readU8(D.OUT_Z_H_A)<<8)|D.accel.readU8(D.OUT_Z_L_A)
 	data = [x,y,z]
-	# convert to two's complement
-	converted = map(twos_complement,data)
-	return converted 
+	print "Raw: ",data
+	data = map(twos_complement,data)	# convert to two's complement
+	print "Two's: ",data
+	data = map(to_analog,data)		# convert to m/s
+	print "analog accel: ",data
+	return data 
 
 	
 def twos_complement(u16):
@@ -241,6 +263,18 @@ def twos_complement(u16):
 	if (u16 & (1<<(bits-1))) != 0:	# get MSB. check if u16 is negative
 		u16 = u16 - (1<<bits)
 	return u16
+
+
+def to_analog(s16):
+	"""
+	converts a signed 16 bit value into an analog value
+	"""
+	global D
+	bits = 16
+	g = 9.18			# [m/s]
+	maxG = D.maxAccel*g		# max accel that can be read
+	frac = 1.0*s16/(2**(bits-1)-1)	# fraction of max value of signed 16bit
+	return maxG*frac
 
 
 def read_data():
@@ -294,11 +328,7 @@ def run():
 	rate = rospy.Rate(D.rate)	
 	while not rospy.is_shutdown():
 		dataG,dataA = read_data()
-		print dataG,dataA
 		# TODO: publish
-		print "gyro ctrl reg", bin(D.gyro.readU8(D.CTRL_REG1_G))
-		print "accel ctrl reg 1", bin(D.accel.readU8(D.CTRL_REG1_XM))
-		print "accel ctrl reg 2", bin(D.accel.readU8(D.CTRL_REG2_XM))
 		print 
 		rate.sleep()
 	
