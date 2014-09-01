@@ -318,7 +318,8 @@ def run():
 	while not rospy.is_shutdown(): 	
 		data[channel] = read_single_in(channel)
 		channel += 1
-		if channel == D.NChannels:		# if all have been sampled, publish and reset.
+		# if all have been sampled, publish and reset.
+		if channel == D.NChannels:					
 			channel = 0
 			publish(data)
 			data = [0,0,0]	
