@@ -2,7 +2,7 @@
 
 ########################################################################
 #
-# This node is for position estimation.When it detects apogee, it sends
+# This node is for position estimation. When it detects apogee, it sends
 # a "fire" command to the deployment node.
 #
 ########################################################################i

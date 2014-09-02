@@ -1,13 +1,13 @@
 #! /usr/bin/python
 
-#######################################################
+#############################################################################
 #
 # This is a node for saving data to a file. To add an
 # additional piece of data to save, add an additional
 # subscriber, a callback for that topic, and a function
 # to write the data to file
 #
-#######################################################
+#############################################################################
 
 
 import rospy

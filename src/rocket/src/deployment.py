@@ -1,5 +1,13 @@
 #! /usr/bin/python
 
+############################################################################
+#
+# When this node recieves the fire command, it pulls the signal pin of the 
+# deployment board high. This separates the rocket.
+#
+############################################################################
+
+
 import rospy
 import time
 import wiringpi2 as wp2

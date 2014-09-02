@@ -1,16 +1,16 @@
 #!/usr/bin/python
 
-###########################################################
+############################################################################
 #
-# This is a ROS wrapper for the ADS1015 analog-to-digital
-# converter.
+# This is a ROS wrapper for the ADS1015 analog-to-digital converter. This 
+# ADC is connected to the XYZ outputs of the high G accel.
 #
 # Note: all variables that start with a "_" (_128SPS)
 # are options. These are meant to abstract away to binary
 # codes. If I want to set the sampling rate to 128 samples
 # per second, I would use "D.sps = D._128SPS"
 #
-###########################################################
+############################################################################
 
 import rospy
 import time

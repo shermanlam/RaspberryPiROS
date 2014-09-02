@@ -1,5 +1,12 @@
 #! /usr/bin/python
 
+############################################################################
+#
+# This file tests GPIO functionality by toggling one of the I/O pins
+#
+############################################################################
+
+
 import rospy
 import time
 import wiringpi2 as wp2
