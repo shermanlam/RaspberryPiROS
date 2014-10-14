@@ -35,7 +35,7 @@ def init_ros():
 	D.accelPub = rospy.Publisher("lowG",Vector3Stamped)
 
 	# rate
-	D.rate = 1	# [Hz]
+	D.rate = 11111111111    #[Hz]
 
 
 def init_i2c():
@@ -333,23 +333,36 @@ def read_data():
 	# to prevent inifinite looping
 	counter = 0
 	limit = 10
+
+	blah = 0
+
 	# loop while both have not been read
 	while not(readG and readA):
+		
 		# check if gyro is ready
 		if not readG:
-			# get the 4th LSB
-			readyG = (D.gyro.readU8(D.STATUS_REG_G) & (1<<3)) >> 3 
-			if readyG==1:
-				# read
-				dataG = read_gyro()
-				readG = 1
+			try:
+				# get the 4th LSB
+				readyG = (D.gyro.readU8(D.STATUS_REG_G) & (1<<3)) >> 3 
+				if readyG==1:
+					# read
+					blah += 1
+					print blah
+					dataG = read_gyro()
+					readG = 1
+			except:
+				print "Missed stuff"
+				pass
 		if not readA==1:
-			# get the 4th LSB
-			readyA = (D.gyro.readU8(D.STATUS_REG_A) & (1<<3)) >> 3 
-			if readyA==1:
-				# read
-				dataA = read_accel()
-				readA = 1
+			try:
+				# get the 4th LSB
+				readyA = (D.gyro.readU8(D.STATUS_REG_A) & (1<<3)) >> 3 
+				if readyA==1:
+					# read
+					dataA = read_accel()
+					readA = 1
+			except:
+				pass
 		time.sleep(1)
 		counter += 1
 		if counter == limit:
