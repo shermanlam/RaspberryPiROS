@@ -35,7 +35,7 @@ def init_ros():
 	D.accelPub = rospy.Publisher("lowG",Vector3Stamped)
 
 	# rate
-	D.rate = 11111111111    #[Hz]
+	D.rate = 60    #[Hz]
 
 
 def init_i2c():
@@ -256,6 +256,10 @@ def write_ctrl_options():
 	D.accel.write8(D.CTRL_REG1_XM,D.ctrl1_XM)
 	D.accel.write8(D.CTRL_REG2_XM,D.ctrl2_XM)
 
+	# print out the written controls
+	print "Gyro Control Registers \n"
+	print "1: ", bin(D.gyro.readU8(D.CTRL_REG1_G))
+
 
 def read_gyro():
 	"""
@@ -334,7 +338,7 @@ def read_data():
 	counter = 0
 	limit = 10
 
-	blah = 0
+	#blah = 0
 
 	# loop while both have not been read
 	while not(readG and readA):
@@ -346,29 +350,34 @@ def read_data():
 				readyG = (D.gyro.readU8(D.STATUS_REG_G) & (1<<3)) >> 3 
 				if readyG==1:
 					# read
-					blah += 1
-					print blah
-					dataG = read_gyro()
+					#blah += 1
+					#print blah
+					gyroData = read_gyro()
 					readG = 1
 			except:
-				print "Missed stuff"
+				print "Bad reading"
 				pass
+		# check if the accel is ready
 		if not readA==1:
 			try:
 				# get the 4th LSB
 				readyA = (D.gyro.readU8(D.STATUS_REG_A) & (1<<3)) >> 3 
 				if readyA==1:
 					# read
-					dataA = read_accel()
+					accelData = read_accel()
 					readA = 1
 			except:
+				print "Bad reading"
 				pass
-		time.sleep(1)
+
+		# increment the number tries for reading data
 		counter += 1
+
+		# don't keep trying to read if something's wrong
 		if counter == limit:
 			print "Could not get all the data"
 			break
-	return dataG,dataA
+	return gyroData,accelData
 
 
 def run():
@@ -376,11 +385,11 @@ def run():
 	samples the gyro and accel at the desired control loop rate
 	"""
 	global D
-	rate = rospy.Rate(D.rate)	
+	r = rospy.Rate(D.rate)	
 	while not rospy.is_shutdown():
 		dataG,dataA = read_data()
 		publish(dataG,dataA)
-		rate.sleep()
+		r.sleep()
 	
 
 def publish(dataG,dataA):
