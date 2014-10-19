@@ -35,7 +35,7 @@ def init_ros():
 	D.accelPub = rospy.Publisher("lowG",Vector3Stamped)
 
 	# rate
-	D.rate = 60    #[Hz]
+	D.rate = 30    #[Hz]
 
 
 def init_i2c():
@@ -257,6 +257,7 @@ def write_ctrl_options():
 	D.accel.write8(D.CTRL_REG2_XM,D.ctrl2_XM)
 
 	# print out the written controls
+	print "loop"	
 	print "Gyro Control Registers \n"
 	print "1: ", bin(D.gyro.readU8(D.CTRL_REG1_G))
 
@@ -338,11 +339,8 @@ def read_data():
 	counter = 0
 	limit = 10
 
-	#blah = 0
-
 	# loop while both have not been read
 	while not(readG and readA):
-		
 		# check if gyro is ready
 		if not readG:
 			try:
