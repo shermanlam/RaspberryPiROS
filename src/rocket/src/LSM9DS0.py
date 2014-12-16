@@ -35,7 +35,7 @@ def init_ros():
 	D.accelPub = rospy.Publisher("lowG",Vector3Stamped)
 
 	# rate
-	D.rate = 30    #[Hz]
+	D.rate = 100    #[Hz]
 
 
 def init_i2c():
@@ -144,8 +144,8 @@ def init_ctrl_options_G():
 	D.identityG	= 0b11010100
 
 	# control register 1
-	DR		= 0b11		# 760 [Hz]
-	BW		= 0b11		# 100 [Hz]
+	DR		= 0b00		# 95 [Hz]
+	BW		= 0b00		# 12.5 [Hz]
 	PD		= 1		# normal
 	Zen		= 1		# enabled	
 	Yen		= 1		# enabled
@@ -160,6 +160,7 @@ def init_ctrl_options_G():
 	ST		= 0b00			# default
 	SIM		= 0b0			# default
 	D.ctrl4_G	= (BDU<<7)|(BLE<<6)|(FS<<4)|(ST<<1)|SIM
+	
 
 
 def gyro_lookup(maxRot):
@@ -329,53 +330,39 @@ def read_data():
 	waits for the gyro and accel data to be ready before trying to read.
 	Alternates between checking each one
 	"""
-	# whether or not the data has been read
-	readG = 0
-	readA = 0
 	# data
 	gyroData = [0,0,0]
 	accelData = [0,0,0]
-	# to prevent inifinite looping
-	counter = 0
-	limit = 10
+	
+	# print "\n new"
 
-	# loop while both have not been read
-	while not(readG and readA):
-		# check if gyro is ready
-		if not readG:
-			try:
-				# get the 4th LSB
-				readyG = (D.gyro.readU8(D.STATUS_REG_G) & (1<<3)) >> 3 
-				if readyG==1:
-					# read
-					#blah += 1
-					#print blah
-					gyroData = read_gyro()
-					readG = 1
-			except:
-				print "Bad reading"
-				pass
-		# check if the accel is ready
-		if not readA==1:
-			try:
-				# get the 4th LSB
-				readyA = (D.gyro.readU8(D.STATUS_REG_A) & (1<<3)) >> 3 
-				if readyA==1:
-					# read
-					accelData = read_accel()
-					readA = 1
-			except:
-				print "Bad reading"
-				pass
+	# check if gyro is ready
+	try:
+		# get the 4th LSB
+		readyG = (D.gyro.readU8(D.STATUS_REG_G) & (1<<3)) >> 3 
+		if readyG==1:
+			# read
+			gyroData = read_gyro()
+			publish_gyro(gyroData)
+	except:
+		print "Error reading gyro data"
+		pass
 
-		# increment the number tries for reading data
-		counter += 1
 
-		# don't keep trying to read if something's wrong
-		if counter == limit:
-			print "Could not get all the data"
-			break
-	return gyroData,accelData
+	# check if the accel is ready
+	try:
+		# get the 4th LSB
+		readyA = (D.gyro.readU8(D.STATUS_REG_A) & (1<<3)) >> 3 
+		if readyA==1:
+			# read
+			accelData = read_accel()
+			publish_accel(accelData)
+	except:
+		print "Bad reading"
+		pass
+
+
+	#return gyroData,accelData
 
 
 def run():
@@ -383,16 +370,19 @@ def run():
 	samples the gyro and accel at the desired control loop rate
 	"""
 	global D
+	# check fifo
+	# print "FIFO", bin(D.gyro.readU8(D.FIFO_CTRL_REG_G))
 	r = rospy.Rate(D.rate)	
+	# r = rospy.Rate(1)
 	while not rospy.is_shutdown():
-		dataG,dataA = read_data()
-		publish(dataG,dataA)
+		read_data()
+		# publish(dataG,dataA)
 		r.sleep()
 	
 
-def publish(dataG,dataA):
+def publish_gyro(dataG):
 	"""
-	publishes the gyro and accel data
+	publishes the gyro data
 	"""
 	global D
 	time = rospy.get_time() 	# not real time, used for elapsed time
@@ -403,6 +393,14 @@ def publish(dataG,dataA):
 	msgG.z = dataG[2]
 	msgG.time = time
 	D.gyroPub.publish(msgG)
+
+
+def publish_accel(dataA):
+	"""
+	publishes the accel data
+	"""
+	global D
+	time = rospy.get_time() 	# not real time, used for elapsed time
 	# accel
 	msgA = Vector3Stamped()
 	msgA.x = dataA[0]

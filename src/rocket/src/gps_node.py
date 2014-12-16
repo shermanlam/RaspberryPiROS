@@ -10,6 +10,7 @@
 import rospy
 import time
 import gps
+import serial			# python serial library
 from rocket.msg import RosGPS
 from subprocess import call
 
@@ -29,7 +30,8 @@ def init():
 	D.gpsPub = rospy.Publisher("gps_data",RosGPS)
 
 	# init gps connection
-	init_gpsd()
+	#init_gpsd()
+	init_serial()
 	
 	# gps data
 	D.NSatellites = 0	# the number of satellites in view
@@ -53,6 +55,53 @@ def init_gpsd():
 	D.session = gps.gps("localhost","2947")
 	D.session.stream(gps.WATCH_ENABLE|gps.WATCH_NEWSTYLE)
 	
+
+def init_serial():
+	"""
+	sets up serial interface with gps. This is meant to be a replacement
+	gpsd.
+	"""
+	global D
+	# start serial connection
+	baud = 9600
+	try:
+		D.gps_serial = serial.Serial("/dev/ttyAMA0",baud,timeout=1)
+		D.gps_serial.open()
+		D.gps_serial.write("$PMTK220,200*2C")
+		D.gps_serial.write("$PMTK300,200,0,0,0,0*2F")
+	except:
+		print "Failed to open serial"
+		rospy.shutdown("Failed to open gps serial")
+
+
+
+def read_and_parse():
+	"""
+	reads in serial data and parses the information. Returns what type of 
+	data was read
+	"""
+	# read
+	line = D.gps_serial.readline()
+
+	# break into components
+	data = line.split(",")
+	#print data
+	# identify and parse. Indicies are from datasheet 
+	if(data[0] == "$GPGGA"):
+		gps_msg = RosGPS()
+		if (data[1] != ""):
+			gps_msg.gps_time = float(data[1])
+		if (data[2] != ""):
+			gps_msg.latitude = float(data[2])
+		if (data[4] != ""):
+			gps_msg.longitude = float(data[4])
+		if (data[9] != ""):
+			gps_msg.altitude = float(data[9])
+		if (data[7] != ""):
+			gps_msg.NSatellites = int(data[7])
+		
+		D.gpsPub.publish(gps_msg)
+
 
 def run():
 	"""
@@ -121,4 +170,5 @@ if __name__ == "__main__":
 	init()
 	rospy.loginfo("GPS node initialized")
 	while not rospy.is_shutdown():
-		run()
+		#run()
+		read_and_parse()
