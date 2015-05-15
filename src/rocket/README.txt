@@ -17,6 +17,6 @@ TODO:
 - LSM9DS0 seems to have an issue with writing control registers
   From an ID stand point, connections are okay
 - ASD1015 crashed suddenly. Unexplained
-- Write the position estimation.
-
-
+- for position estimation, the AND the imu and gps apogee detection signals
+  each signal is OR-ed with an error detection boolean.
+  deploy = (imu_apogee OR imu_okay) AND (gps_apogee OR gps_okay)
