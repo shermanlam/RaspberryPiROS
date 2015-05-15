@@ -19,4 +19,4 @@ TODO:
 - ASD1015 crashed suddenly. Unexplained
 - for position estimation, the AND the imu and gps apogee detection signals
   each signal is OR-ed with an error detection boolean.
-  deploy = (imu_apogee OR imu_okay) AND (gps_apogee OR gps_okay)
+  deploy = (imu_apogee OR imu_error AND (gps_apogee OR gps_error)
